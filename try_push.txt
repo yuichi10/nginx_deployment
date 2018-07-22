@@ -1,0 +1,1 @@
+echo "asagao_metric 45" | curl --data-binary @- http://35.230.112.72:9091/metrics/job/light/instance/uuid-aeaas
