@@ -1,0 +1,52 @@
+groups:
+- name: too-dark-light
+  rules:
+  - alert: TooDark
+    expr: asagao_metrics{exported_job="light",exported_instance="uuid-aeaas"} > 220
+    for: 3m
+    labels:
+      severity: warning
+    annotations:
+      summary: "くらいよ"
+      description: "明るくして!"
+
+- name: flower-helth
+  rules:
+  - alert: dangerous
+    expr: health_metrics{exported_instance="uuid-aeaas",exported_job="health"} != 1
+    for: 3m
+    labels:
+      severity: critic
+    annotations:
+      summary: "やばい"
+      description: "たすけて"
+
+- name: flower
+  rules:
+  - alert: bloomed
+    expr: health_metrics{exported_instance="uuid-aeaas",exported_job="flower"} == 1
+    for: 3m
+    labels:
+      severity: bloomed
+    annotations:
+      summary: "花咲いた！"
+      description: "早くみに来て！"
+
+- name: moisture
+  rules:
+  - alert: needWaterASAP
+    expr: asagao_metrics{exported_instance="uuid-aeaas",exported_job="moisture"} < 70
+    for: 3m
+    labels:
+      severity: critic
+    annotations:
+      summary: "死ぬ"
+      description: "水"
+  - alert: needWater
+    expr: asagao_metrics{exported_instance="uuid-aeaas",exported_job="moisture"} < 100
+    for: 3m
+    labels:
+      severity: critic
+    annotations:
+      summary: "水がほしい"
+      description: "はやく水をいれて"
