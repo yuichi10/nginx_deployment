@@ -1,0 +1,46 @@
+global:
+  slack_api_url: api
+
+route:
+  receiver: 'slack-notifications'
+  group_by: [alertname]
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 10m
+  routes:
+  - match:
+      severity: bloomed
+    repeat_interval: 12h
+    receiver: 'slack-notifications-bloomed'
+  - match:
+      severity: critic
+    receiver: 'slack-notifications-critic'
+  - match:
+      severity: warn
+    receiver: 'slack-notifications-warn'
+
+receivers:
+- name: 'slack-notifications'
+  slack_configs:
+  - channel: '#alerts'
+    text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+    title: "{{ range .Alerts }}{{ .Annotations.summary}}\n{{ end }}"
+    title_link: ""
+- name: 'slack-notifications-warn'
+  slack_configs:
+  - channel: '#alerts'
+    text: "<!here> {{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+    title: "{{ range .Alerts }}{{ .Annotations.summary}}\n{{ end }}"
+    title_link: ""
+- name: 'slack-notifications-critic'
+  slack_configs:
+  - channel: '#alerts'
+    text: "<!everyone> {{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+    title: "{{ range .Alerts }}{{ .Annotations.summary}}\n{{ end }}"
+    title_link: ""
+- name: 'slack-notifications-bloomed'
+  slack_configs:
+  - channel: '#alerts'
+    text: "<!everyone> {{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+    title: "{{ range .Alerts }}{{ .Annotations.summary}}\n{{ end }}"
+    title_link: ""
